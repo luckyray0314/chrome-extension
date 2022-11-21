@@ -3,6 +3,8 @@ import styled from "styled-components";
 import logo from "../assets/logo.svg";
 
 const Wrapper = styled.div`
+  width: 320px;
+  height: 328px;
   padding: 40px 30px;
   display: flex;
   flex-direction: column;
@@ -11,7 +13,7 @@ const Wrapper = styled.div`
 
 const DescriptionContainer = styled.p`
   width: 172px;
-  font-family: 'Gilroy';
+  font-family: 'Gilroy-Bold';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
