@@ -1,6 +1,9 @@
 import { FC } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "../wallet/Connectors";
+import { connectMetaMask } from "../contentScript";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -13,7 +16,7 @@ const Wrapper = styled.div`
 
 const DescriptionContainer = styled.p`
   width: 172px;
-  font-family: 'Gilroy-Bold';
+  font-family: "Gilroy-Bold";
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -32,14 +35,14 @@ const ConnectWalletButton = styled.button`
   gap: 10px;
   width: 260px;
   height: 47px;
-  background: linear-gradient(91.24deg, #1DE99B 0.26%, #0063FB 99.58%);
+  background: linear-gradient(91.24deg, #1de99b 0.26%, #0063fb 99.58%);
   border-radius: 15px;
   border: none;
   flex: none;
   order: 1;
   align-self: stretch;
   flex-grow: 0;
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -49,13 +52,13 @@ const ConnectWalletButton = styled.button`
 `;
 
 const NotNowButton = styled.button`
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
   line-height: 21px;
   text-align: center;
-  background: linear-gradient(91.24deg, #1DE99B 0.26%, #0063FB 99.58%);
+  background: linear-gradient(91.24deg, #1de99b 0.26%, #0063fb 99.58%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -67,18 +70,52 @@ const NotNowButton = styled.button`
   cursor: pointer;
 `;
 
+const CenterDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const Connect: FC = () => {
+  const { active, account, library, connector, activate, deactivate } =
+    useWeb3React();
+
+  async function connect() {
+    console.log(document.body);
+    connectMetaMask();
+    // try {
+    //   await activate(injected);
+    // } catch (ex) {
+    //   console.log(ex);
+    // }
+  }
+
+  async function disconnect() {
+    try {
+      deactivate();
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   return (
     <Wrapper>
-      <img style={{
-        width: "60px",
-        height: "60px",
-      }} src={logo} alt="Logo" />
-      <DescriptionContainer>Please connect to login to login Now</DescriptionContainer>
-      <ConnectWalletButton>Connect Wallet</ConnectWalletButton>
+      <img
+        style={{
+          width: "60px",
+          height: "60px",
+        }}
+        src={logo}
+        alt="Logo"
+      />
+      <DescriptionContainer>
+        Please connect to login to login Now
+      </DescriptionContainer>
+      <CenterDiv>
+        <ConnectWalletButton onClick={connect}>Connect Wallet</ConnectWalletButton>
+      </CenterDiv>
       <NotNowButton>Not Now</NotNowButton>
     </Wrapper>
-  )
-}
+  );
+};
 
 export default Connect;

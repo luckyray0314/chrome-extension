@@ -6,6 +6,7 @@ printAllPageLinks();
 
 // This needs to be an export due to typescript implementation limitation of needing '--isolatedModules' tsconfig
 export function printAllPageLinks() {
+  console.log(document.body);
   const allLinks = Array.from(document.querySelectorAll('a')).map(
     link => link.href
   );
@@ -16,4 +17,9 @@ export function printAllPageLinks() {
   );
   console.log(allLinks);
   console.log('-'.repeat(30));
+}
+
+export function connectMetaMask() {
+  printAllPageLinks();
+  console.log("+++");
 }

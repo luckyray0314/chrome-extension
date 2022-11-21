@@ -107,7 +107,7 @@ const DetectedAddressList: FC = () => {
         "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b"
       ]);
       setScanning(false);
-    }, 15000);
+    }, 150);
   }, []);
   return (
     <Wrapper>

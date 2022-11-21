@@ -29,11 +29,15 @@ const WalletAddress = styled.div`
 `;
 
 const SingleAddressRow: FC = () => {
+  const onMessage = () => {
+    console.log("onMessage");
+  }
+
   return (
     <Container>
       <img src={demoAvatar} alt="Demo" />
       <WalletAddress>0cxf748s</WalletAddress>
-      <img style={{ cursor: "pointer" }} src={message} alt="" />
+      <img style={{ cursor: "pointer" }} src={message} alt="" onClick={() => onMessage()} />
     </Container>
   )
 }
