@@ -8,9 +8,13 @@ export function messageInBackground() {
   console.log('just do not forget, I cannot render anything !');
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request)
-  console.log(document)
-})
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   console.log(request)
+//   sendResponse(request)
+//   // //@ts-ignore
+//   // window.ethereum.on('connect', (connectInfo: ConnectInfo) => {
+//   //   console.log(connectInfo)
+//   // });
+// });
 
 // chrome.runtime.sendMessage({ url: "1234"});

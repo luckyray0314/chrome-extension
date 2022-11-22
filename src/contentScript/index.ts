@@ -12,7 +12,6 @@ export function printAllPageLinks() {
 }
 
 export function connectMetaMask() {
-  chrome.runtime.sendMessage({"url": "test"});
   // console.log(sending)
   // sending.then(() => console.log("Success"), () => console.log("Failed"))
   console.log("+++");
@@ -23,5 +22,6 @@ console.log(document.body)
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // window.ethereum
-  sendResponse(request)
+  console.log(document.body)
+  sendResponse(["0x1234", "0x1235"])
 })

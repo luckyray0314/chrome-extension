@@ -104,33 +104,36 @@ const Connect: FC = () => {
   const navigate = useNavigate();
 
   async function connect() {
-    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    //   console.log(tabs);
-    //   const tab = tabs[0];
-    //   if (tab && tab.id) {
-    //     chrome.tabs.sendMessage(tab.id, { url: "123"}, function handler (res) {console.log(res)});
-    //   }
-    // });
-    setIsConnected(true);
-    if (isConnected === true) {
-      const data = {
-        wallet: walletAddress,
-        password: password,
-      };
-      axios
-        .post(
-          `http://sirklserver-env.eba-advpp2ip.eu-west-1.elasticbeanstalk.com/auth/signIn`,
-          data
-        )
-        .then((response) => {
-          navigate("/addresslist");
-        })
-        .catch((err) => {
-          setError(err.response.data.message)
-          console.log(err.response.data);
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      console.log(tabs);
+      const tab = tabs[0];
+      if (tab && tab.id) {
+        chrome.tabs.sendMessage(tab.id, { url: "123"}, function handler (res) {
+          console.log(chrome.runtime.lastError)
+          console.log(res)
         });
-      } else {
-    }
+      }
+    });
+    // setIsConnected(true);
+    // if (isConnected === true) {
+    //   const data = {
+    //     wallet: walletAddress,
+    //     password: password,
+    //   };
+    //   axios
+    //     .post(
+    //       `http://sirklserver-env.eba-advpp2ip.eu-west-1.elasticbeanstalk.com/auth/signIn`,
+    //       data
+    //     )
+    //     .then((response) => {
+    //       navigate("/addresslist");
+    //     })
+    //     .catch((err) => {
+    //       setError(err.response.data.message)
+    //       console.log(err.response.data);
+    //     });
+    //   } else {
+    // }
   }
 
   const onClose = () => {
