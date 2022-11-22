@@ -104,6 +104,13 @@ const Connect: FC = () => {
   const navigate = useNavigate();
 
   async function connect() {
+    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    //   console.log(tabs);
+    //   const tab = tabs[0];
+    //   if (tab && tab.id) {
+    //     chrome.tabs.sendMessage(tab.id, { url: "123"}, function handler (res) {console.log(res)});
+    //   }
+    // });
     setIsConnected(true);
     if (isConnected === true) {
       const data = {
@@ -122,7 +129,7 @@ const Connect: FC = () => {
           setError(err.response.data.message)
           console.log(err.response.data);
         });
-    } else {
+      } else {
     }
   }
 
