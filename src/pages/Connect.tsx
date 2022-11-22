@@ -1,14 +1,16 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../wallet/Connectors";
-import { connectMetaMask } from "../contentScript";
+import walletAddressShow from "../functions/walletAddressShow";
+// import { injected } from "../wallet/Connectors";
+// import { connectMetaMask } from "../contentScript";
 
 const Wrapper = styled.div`
   width: 320px;
-  height: 328px;
+  max-height: 328px;
   padding: 40px 30px;
   display: flex;
   flex-direction: column;
@@ -76,32 +78,57 @@ const CenterDiv = styled.div`
   justify-content: center;
 `;
 
+const PasswordInput = styled.input`
+  padding: 10px;
+  background: #f2f2f2;
+  border-radius: 10px;
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+`;
+
+const ErrorSpan = styled.p`
+  color: red;
+  margin: 0px;
+`;
+
 const Connect: FC = () => {
+  const [walletAddress, setWalletAddress] = useState<string>(
+    "0xA37f49E7B0fb28923515eE6a5D8B5a4fC2f2Cd1B"
+  );
+  const [password, setPassword] = useState<string>("");
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
-  const { active, account, library, connector, activate, deactivate } =
-    useWeb3React();
 
   async function connect() {
-    navigate("/addresslist");
-    connectMetaMask();
-    // try {
-    //   await activate(injected);
-    // } catch (ex) {
-    //   console.log(ex);
-    // }
-  }
-
-  async function disconnect() {
-    try {
-      deactivate();
-    } catch (ex) {
-      console.log(ex);
+    setIsConnected(true);
+    if (isConnected === true) {
+      const data = {
+        wallet: walletAddress,
+        password: password,
+      };
+      axios
+        .post(
+          `http://sirklserver-env.eba-advpp2ip.eu-west-1.elasticbeanstalk.com/auth/signIn`,
+          data
+        )
+        .then((response) => {
+          navigate("/addresslist");
+        })
+        .catch((err) => {
+          setError(err.response.data.message)
+          console.log(err.response.data);
+        });
+    } else {
     }
   }
 
   const onClose = () => {
     window.close();
-  }
+  };
 
   return (
     <Wrapper>
@@ -116,8 +143,26 @@ const Connect: FC = () => {
       <DescriptionContainer>
         Please connect to login to login Now
       </DescriptionContainer>
+      {isConnected ? (
+        <div>
+          <label style={{ fontSize: "16px" }}>password</label>
+          <br></br>
+          <PasswordInput
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          ></PasswordInput>
+          <ErrorSpan>{error}</ErrorSpan>
+        </div>
+      ) : (
+        ""
+      )}
       <CenterDiv>
-        <ConnectWalletButton onClick={connect}>Connect Wallet</ConnectWalletButton>
+        <ConnectWalletButton onClick={connect}>
+          {isConnected
+            ? `Sign in with ${walletAddressShow(walletAddress)}`
+            : "Connect Wallet"}
+        </ConnectWalletButton>
       </CenterDiv>
       <NotNowButton onClick={onClose}>Not Now</NotNowButton>
     </Wrapper>
