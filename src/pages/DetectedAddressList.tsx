@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
 import SingleAddressRow from "../components/detectedAddressList/SingleAddressRow";
 import styled from "styled-components";
 import refresh from "../assets/refresh.svg";
@@ -96,6 +97,8 @@ const ScanText = styled.div`
 const DetectedAddressList: FC = () => {
   const [scanning, setScanning] = useState<boolean>(true);
   const [wallets, setWallets] = useState<string[]>([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     setTimeout(() => {
       setWallets([
@@ -107,14 +110,19 @@ const DetectedAddressList: FC = () => {
         "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b"
       ]);
       setScanning(false);
-    }, 150);
+    }, 200);
   }, []);
+
+  const onRefresh = () => {
+    console.log("onRefresh");
+  }
+
   return (
     <Wrapper>
       <HeaderContainer>
         <Title>3 Addresses Detected</Title>
         <ButtonContainer>
-          <img src={refresh} alt="Refresh" />
+          <img onClick={() => onRefresh()} src={refresh} alt="Refresh" />
           <img src={home} alt="Home" />
           <BadgeContainer>
             <div style={{ width: "15px", height: "15px", borderRadius: "1000px", background: "#FF5050", color: "white", lineHeight: 1 }}>3</div>
@@ -130,10 +138,10 @@ const DetectedAddressList: FC = () => {
             </LoadingContainer>
           ) : 
           wallets.map((wallet, id) => (
-            <>
+            <div key={id}>
               {id !== 0 && <Divider />}
-              <SingleAddressRow></SingleAddressRow>
-            </>
+              <SingleAddressRow address="0x3RJE3"></SingleAddressRow>
+            </div>
           ))
         }
       </BodyContainer>

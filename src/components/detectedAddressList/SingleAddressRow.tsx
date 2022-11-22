@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import demoAvatar from "../../assets/demo-avatar.svg";
 import message from "../../assets/message.svg";
@@ -28,18 +29,29 @@ const WalletAddress = styled.div`
   justify-content: start;
 `;
 
-const SingleAddressRow: FC = () => {
+interface TypeProps {
+  address: string,
+}
+
+const SingleAddressRow: FC<TypeProps> = (props) => {
+  const navigate = useNavigate();
+
   const onMessage = () => {
-    console.log("onMessage");
-  }
+    navigate(`/messageTo/${props.address}`);
+  };
 
   return (
     <Container>
       <img src={demoAvatar} alt="Demo" />
       <WalletAddress>0cxf748s</WalletAddress>
-      <img style={{ cursor: "pointer" }} src={message} alt="" onClick={() => onMessage()} />
+      <img
+        style={{ cursor: "pointer" }}
+        src={message}
+        alt=""
+        onClick={() => onMessage()}
+      />
     </Container>
-  )
-}
+  );
+};
 
 export default SingleAddressRow;

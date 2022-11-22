@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import { useWeb3React } from "@web3-react/core";
@@ -76,11 +77,12 @@ const CenterDiv = styled.div`
 `;
 
 const Connect: FC = () => {
+  const navigate = useNavigate();
   const { active, account, library, connector, activate, deactivate } =
     useWeb3React();
 
   async function connect() {
-    console.log(document.body);
+    navigate("/addresslist");
     connectMetaMask();
     // try {
     //   await activate(injected);

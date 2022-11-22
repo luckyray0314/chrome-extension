@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import leftArrow from "../assets/left-arrow.svg";
 import plus from "../assets/plus.svg";
@@ -13,6 +14,7 @@ const Wrapper = styled.div`
 
 const HeaderContainer = styled.div`
   display: flex;
+  padding: 10px;
 `;
 
 const MessageInput = styled.textarea`
@@ -119,10 +121,25 @@ const SpanName = styled.span`
 `;
 
 const MessageTo: FC = () => {
+  const naviagte = useNavigate();
+
+  const onBack = () => {
+    naviagte("/addresslist");
+  };
+
+  const onSend = () => {
+    naviagte("/messagelist");
+  };
+
   return (
     <Wrapper>
       <HeaderContainer>
-        <img src={leftArrow} alt="" />
+        <img
+          onClick={() => onBack()}
+          src={leftArrow}
+          alt=""
+          style={{ cursor: "pointer" }}
+        />
         <ColDiv>
           <SpanMessageTo>Message to</SpanMessageTo>
           <SpanName>@Zain Ekstrom</SpanName>
@@ -135,7 +152,7 @@ const MessageTo: FC = () => {
             <img src={plus} alt="" />
           </PlusButton2>
         </PlusButton1>
-        <SendButton>Send</SendButton>
+        <SendButton onClick={() => onSend()}>Send</SendButton>
       </FooterContainer>
     </Wrapper>
   );
