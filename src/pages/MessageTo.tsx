@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import leftArrow from "../assets/left-arrow.svg";
@@ -7,21 +7,19 @@ import plus from "../assets/plus.svg";
 const Wrapper = styled.div`
   width: 550px;
   height: 300px;
-  padding: 20px 25px;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderContainer = styled.div`
   display: flex;
-  padding: 10px;
+  padding: 20px;
 `;
 
 const MessageInput = styled.textarea`
-  margin: 30px 0;
+  margin: 20px 20px;
   padding: 20px 20px 0px;
-  gap: 115px;
-  width: 500px;
+  width: 470px;
   height: 102px;
   background: #f2f2f2;
   border-radius: 13.3333px;
@@ -35,6 +33,7 @@ const MessageInput = styled.textarea`
 const FooterContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 20px;
 `;
 
 const SendButton = styled.button`
@@ -121,6 +120,7 @@ const SpanName = styled.span`
 `;
 
 const MessageTo: FC = () => {
+  const [name, setName] = useState<string>("Zain Ekstrom");
   const naviagte = useNavigate();
 
   const onBack = () => {
@@ -142,7 +142,7 @@ const MessageTo: FC = () => {
         />
         <ColDiv>
           <SpanMessageTo>Message to</SpanMessageTo>
-          <SpanName>@Zain Ekstrom</SpanName>
+          <SpanName>@{name}</SpanName>
         </ColDiv>
       </HeaderContainer>
       <MessageInput></MessageInput>

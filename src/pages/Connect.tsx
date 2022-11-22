@@ -99,6 +99,10 @@ const Connect: FC = () => {
     }
   }
 
+  const onClose = () => {
+    window.close();
+  }
+
   return (
     <Wrapper>
       <img
@@ -115,7 +119,7 @@ const Connect: FC = () => {
       <CenterDiv>
         <ConnectWalletButton onClick={connect}>Connect Wallet</ConnectWalletButton>
       </CenterDiv>
-      <NotNowButton>Not Now</NotNowButton>
+      <NotNowButton onClick={onClose}>Not Now</NotNowButton>
     </Wrapper>
   );
 };

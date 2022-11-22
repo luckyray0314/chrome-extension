@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import leftArrow from "../assets/left-arrow.svg";
@@ -8,7 +8,7 @@ import received from "../assets/received.svg";
 
 const Wrapper = styled.div`
   width: 550px;
-  height: 300px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -82,6 +82,7 @@ const InputDiv = styled.div`
 const InputMessage = styled.input`
   background: #f2f2f2;
   border-radius: 13.3333px;
+  width: 350px;
   height: 40px;
   font-family: "Gilroy";
   font-style: normal;
@@ -97,6 +98,7 @@ const InputMessage = styled.input`
 const ContentDiv = styled.div`
   background: #f5fdff;
   padding: 10px;
+  overflow: auto;
 `;
 
 const MessageSendContent = styled.div`
@@ -145,58 +147,99 @@ const SpanTime = styled.span`
 `;
 
 const MessageList: FC = () => {
-	let navigate = useNavigate();
+  const [messageData, setMessageData] = useState([
+    {
+      content:
+        "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
+      type: "send",
+    },
+    {
+      content: "hey, I want to contact you",
+      type: "receive",
+    },
+    {
+      content:
+        "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
+      type: "send",
+    },
+    {
+      content: "hey, I want to contact you",
+      type: "receive",
+    },
+  ]);
+  let navigate = useNavigate();
 
   const onBack = () => {
-		navigate(`/addresslist`);
-  }
+    navigate(`/addresslist`);
+  };
 
   return (
     <Wrapper>
       <HeaderContainer>
-        <img onClick={() => onBack()} src={leftArrow} alt="" style={{cursor: 'pointer'}} />
+        <img
+          onClick={() => onBack()}
+          src={leftArrow}
+          alt=""
+          style={{ cursor: "pointer" }}
+        />
         <ColDiv>
           <SpanMessageTo>Message to</SpanMessageTo>
           <SpanName>@Zain Ekstrom</SpanName>
         </ColDiv>
       </HeaderContainer>
       <ContentDiv>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "end",
-            marginBottom: "10px",
-          }}
-        >
-          <MessageSendContent>
-            Find out who is in charge of this portion of the process. Find out
-            who is in chargeContent
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                marginTop: "10px",
-              }}
-            >
-              <SpanTime>2:05 AM</SpanTime>
-              <img src={received} alt="" />
-            </div>
-          </MessageSendContent>
-        </div>
-        <div style={{ display: "flex", justifyContent: "start" }}>
-          <MessageReceiveContent>
-            hey, I want to contact you
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                marginTop: "10px",
-              }}
-            >
-              <SpanTime>2:05 AM</SpanTime>
-            </div>
-          </MessageReceiveContent>
-        </div>
+        {messageData.map((value, key) => {
+          if (value.type === "receive") {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  marginBottom: "10px",
+                }}
+                key={key}
+              >
+                <MessageReceiveContent>
+                  {value.content}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <SpanTime>2:05 AM</SpanTime>
+                  </div>
+                </MessageReceiveContent>
+              </div>
+            );
+          } else {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "end",
+                  marginBottom: "10px",
+                }}
+                key={key}
+              >
+                <MessageSendContent>
+                  {value.content}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <SpanTime>2:05 AM</SpanTime>
+                    <img src={received} alt="" />
+                  </div>
+                </MessageSendContent>
+              </div>
+            );
+          }
+        })}
       </ContentDiv>
       <FooterContainer>
         <InputDiv>
