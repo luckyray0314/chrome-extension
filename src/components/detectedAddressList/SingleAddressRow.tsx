@@ -43,7 +43,7 @@ const SingleAddressRow: FC<TypeProps> = (props) => {
   return (
     <Container>
       <img src={demoAvatar} alt="Demo" />
-      <WalletAddress>0cxf748s</WalletAddress>
+      <WalletAddress>{props.address}</WalletAddress>
       <img
         style={{ cursor: "pointer" }}
         src={message}

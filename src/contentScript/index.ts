@@ -1,3 +1,5 @@
+const Validator = require("wallet-validator");
+
 /*global chrome*/
 // If your extension doesn't need a content script, just leave this file empty
 
@@ -8,20 +10,24 @@ printAllPageLinks();
 // This needs to be an export due to typescript implementation limitation of needing '--isolatedModules' tsconfig
 export function printAllPageLinks() {
   // console.log("content", chrome.runtime)
-  
 }
 
 export function connectMetaMask() {
-  // console.log(sending)
-  // sending.then(() => console.log("Success"), () => console.log("Failed"))
-  console.log("+++");
+  console.log("connectMetaMask");
 }
-
-console.log("here")
-console.log(document.body)
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // window.ethereum
-  console.log(document.body)
-  sendResponse(["0x1234", "0x1235"])
-})
+  let contentHtml = document.body.outerHTML;
+  // let contentHtml = document.getElementsByTagName("html")[0].innerHTML;
+  // console.log(contentHtml);
+  let strippedHtml = contentHtml.replace(/<[^>]+>/g, " ");
+  const htmlArray = strippedHtml.split(" ");
+  let addressArray = [];
+  for (let i = 0; i < htmlArray.length; i++) {
+    if (Validator.validate(htmlArray[i], "ETH")) {
+      addressArray.push(htmlArray[i]);
+    }
+  }
+  sendResponse(addressArray);
+});

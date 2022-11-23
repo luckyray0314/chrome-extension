@@ -1,17 +1,18 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SingleAddressRow from "../components/detectedAddressList/SingleAddressRow";
 import styled from "styled-components";
 import refresh from "../assets/refresh.svg";
 import home from "../assets/home.svg";
 import greyScanning from "../assets/grey-scanning.svg";
+import walletAddressShow from "../functions/walletAddressShow";
 
 const Wrapper = styled.div`
   width: 550px;
   height: 358px;
   display: flex;
   flex-direction: column;
-  background: #F5FDFF;
+  background: #f5fdff;
 `;
 
 const HeaderContainer = styled.div`
@@ -25,12 +26,12 @@ const HeaderContainer = styled.div`
 const Title = styled.div`
   width: 202px;
   height: 24px;
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  color: #0D0502;
+  color: #0d0502;
   cursor: pointer;
 `;
 
@@ -86,12 +87,12 @@ const LoadingContainer = styled.div`
 `;
 
 const ScanText = styled.div`
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  color: #9BA0A5;
+  color: #9ba0a5;
 `;
 
 const DetectedAddressList: FC = () => {
@@ -99,54 +100,79 @@ const DetectedAddressList: FC = () => {
   const [wallets, setWallets] = useState<string[]>([]);
   const navigate = useNavigate();
 
+  const detectWalletAddress = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      console.log(tabs);
+      const tab = tabs[0];
+      if (tab && tab.id) {
+        chrome.tabs.sendMessage(tab.id, { url: "123" }, function handler(res) {
+          console.log(res);
+          setWallets(res);
+          setTimeout(() => {
+            setScanning(false);
+          }, 200);
+        });
+      }
+    });
+  };
   useEffect(() => {
-    setTimeout(() => {
-      setWallets([
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b",
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b",
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b",
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b",
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b",
-        "0xc02a110Ae59C580a6d95e045Af53Fa63B226952b"
-      ]);
-      setScanning(false);
-    }, 200);
+    detectWalletAddress();
   }, []);
 
   const onRefresh = () => {
-    console.log("onRefresh");
-  }
+    setScanning(true);
+    detectWalletAddress();
+  };
 
   return (
     <Wrapper>
       <HeaderContainer>
-        <Title>3 Addresses Detected</Title>
+        <Title>{wallets.length} Addresses Detected</Title>
         <ButtonContainer>
           <img onClick={() => onRefresh()} src={refresh} alt="Refresh" />
           <img src={home} alt="Home" />
           <BadgeContainer>
-            <div style={{ width: "15px", height: "15px", borderRadius: "1000px", background: "#FF5050", color: "white", lineHeight: 1 }}>3</div>
+            <div
+              style={{
+                width: "15px",
+                height: "15px",
+                borderRadius: "1000px",
+                background: "#FF5050",
+                color: "white",
+                lineHeight: 1,
+              }}
+            >
+              3
+            </div>
           </BadgeContainer>
         </ButtonContainer>
       </HeaderContainer>
       <BodyContainer>
-        {
-          scanning ? (
-            <LoadingContainer>
-              <img className="loader" style={{ width: "90px", height: "90px" }} src={greyScanning} alt="Scanning" />
-              <ScanText>Scanning</ScanText>
-            </LoadingContainer>
-          ) : 
-          wallets.map((wallet, id) => (
-            <div key={id}>
-              {id !== 0 && <Divider />}
-              <SingleAddressRow address="0x3RJE3"></SingleAddressRow>
-            </div>
-          ))
-        }
+        {scanning ? (
+          <LoadingContainer>
+            <img
+              className="loader"
+              style={{ width: "90px", height: "90px" }}
+              src={greyScanning}
+              alt="Scanning"
+            />
+            <ScanText>Scanning</ScanText>
+          </LoadingContainer>
+        ) : (
+          wallets.map((wallet, id) => {
+            return (
+              <div key={id}>
+                {id !== 0 && <Divider />}
+                <SingleAddressRow
+                  address={wallet}
+                ></SingleAddressRow>
+              </div>
+            );
+          })
+        )}
       </BodyContainer>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default DetectedAddressList
+export default DetectedAddressList;
