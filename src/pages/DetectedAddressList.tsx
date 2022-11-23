@@ -5,7 +5,6 @@ import styled from "styled-components";
 import refresh from "../assets/refresh.svg";
 import home from "../assets/home.svg";
 import greyScanning from "../assets/grey-scanning.svg";
-import walletAddressShow from "../functions/walletAddressShow";
 
 const Wrapper = styled.div`
   width: 550px;

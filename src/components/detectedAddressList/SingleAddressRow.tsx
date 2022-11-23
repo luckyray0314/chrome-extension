@@ -1,8 +1,9 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import styled from "styled-components";
-import demoAvatar from "../../assets/demo-avatar.svg";
 import message from "../../assets/message.svg";
+import walletAddressShow from "../../functions/walletAddressShow";
 
 const Container = styled.div`
   display: flex;
@@ -42,8 +43,8 @@ const SingleAddressRow: FC<TypeProps> = (props) => {
 
   return (
     <Container>
-      <img src={demoAvatar} alt="Demo" />
-      <WalletAddress>{props.address}</WalletAddress>
+      <Jazzicon diameter={50} seed={jsNumberForAddress(props.address)} />
+      <WalletAddress>{walletAddressShow(props.address)}</WalletAddress>
       <img
         style={{ cursor: "pointer" }}
         src={message}
