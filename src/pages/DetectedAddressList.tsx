@@ -127,7 +127,7 @@ const DetectedAddressList: FC = () => {
   return (
     <Wrapper>
       <HeaderContainer>
-        <Title>{wallets.length} Addresses Detected</Title>
+        <Title>{wallets ? wallets.length : 0} Addresses Detected</Title>
         <ButtonContainer>
           <img onClick={() => onRefresh()} src={refresh} alt="Refresh" />
           <img src={home} alt="Home" />
@@ -158,17 +158,17 @@ const DetectedAddressList: FC = () => {
             />
             <ScanText>Scanning</ScanText>
           </LoadingContainer>
-        ) : (
+        ) : wallets.length > 0 ? (
           wallets.map((wallet, id) => {
             return (
               <div key={id}>
                 {id !== 0 && <Divider />}
-                <SingleAddressRow
-                  address={wallet}
-                ></SingleAddressRow>
+                <SingleAddressRow address={wallet}></SingleAddressRow>
               </div>
             );
           })
+        ) : (
+          <p>Not found Wallet Address</p>
         )}
       </BodyContainer>
     </Wrapper>
