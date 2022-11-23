@@ -158,7 +158,7 @@ const DetectedAddressList: FC = () => {
             />
             <ScanText>Scanning</ScanText>
           </LoadingContainer>
-        ) : wallets.length > 0 ? (
+        ) : wallets && wallets.length > 0 ? (
           wallets.map((wallet, id) => {
             return (
               <div key={id}>

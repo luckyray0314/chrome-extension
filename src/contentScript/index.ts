@@ -19,8 +19,6 @@ export function connectMetaMask() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // window.ethereum
   let contentHtml = document.body.outerHTML;
-  // let contentHtml = document.getElementsByTagName("html")[0].innerHTML;
-  // console.log(contentHtml);
   let strippedHtml = contentHtml.replace(/<[^>]+>/g, " ");
   const htmlArray = strippedHtml.split(" ");
   let addressArray = [];
