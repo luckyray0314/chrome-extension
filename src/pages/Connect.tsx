@@ -3,10 +3,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
-import { useWeb3React } from "@web3-react/core";
 import walletAddressShow from "../functions/walletAddressShow";
 // import { injected } from "../wallet/Connectors";
 // import { connectMetaMask } from "../contentScript";
+import createProvider from "metamask-extension-provider";
+const Eth = require('ethjs');
+
+const provider = createProvider();
+
+const eth = new Eth(provider)
 
 const Wrapper = styled.div`
   width: 320px;
@@ -105,6 +110,37 @@ const Connect: FC = () => {
 
   async function connect() {
     navigate("/addresslist");
+    if (provider) {
+      console.log('provider detected', provider)
+      const eth = new Eth(provider)
+      console.log('MetaMask provider detected.')
+      console.log(eth)
+      eth.accounts()
+      .then((accounts: string[]) => {
+        console.log(accounts)
+        console.log(`Detected MetaMask account ${accounts[0]}`)
+      })
+    
+      provider.on('error', (error) => {
+        console.log(error)
+        // if (error && error.includes('lost connection')) {
+        //   renderText('MetaMask extension not detected.')
+        // }
+      })
+    
+    } else {
+      console.log('MetaMask provider not detected.')
+    }
+    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    //   console.log(tabs);
+    //   const tab = tabs[0];
+    //   if (tab && tab.id) {
+    //     chrome.tabs.sendMessage(tab.id, { url: "123"}, function handler (res) {
+    //       console.log(chrome.runtime.lastError)
+    //       console.log(res)
+    //     });
+    //   }
+    // });
     // setIsConnected(true);
     // if (isConnected === true) {
     //   const data = {
