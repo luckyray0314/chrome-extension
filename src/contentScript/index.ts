@@ -17,7 +17,6 @@ export function printAllPageLinks() {
   function connectSirkiWallet () {
     if (window.ethereum) {
       window.ethereum.enable().then((accounts) => {
-        console.log(accounts[0]);
         const spanAddress = document.createElement("span");
         spanAddress.setAttribute("id", "span-wallet-address");
         spanAddress.setAttribute("hidden", true);
@@ -39,9 +38,6 @@ const connect = async () => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // window.ethereum
-  console.log("*****************");
-  console.log(request.url);
   if (request.url === "detect") {
     let contentHtml = document.body.outerHTML;
     let strippedHtml = contentHtml.replace(/<[^>]+>/g, " ");
@@ -53,27 +49,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     }
     sendResponse(addressArray);
-  }
-  else if (request.url === "connect") {
+  } else if (request.url === "connect") {
     connect();
+  } else if (request.url === "getmywallet") {
+    let myWallet = [];
+    myWallet.push(document.getElementById("span-wallet-address").innerHTML);
+    sendResponse(myWallet);
   }
 });
-  // chrome.runtime.onMessage.addListener((request, sender, sendResponse1) => {
-  //   console.log("Success receive")
-  //   sendResponse1("Great")
-  // })
-  
-//   const createMetaMaskProvider = require('metamask-extension-provider')
-
-//   const provider = createMetaMaskProvider()
-
-//   provider.on('error', (error) => {
-//     // Failed to connect to MetaMask, fallback logic.
-//   })
-//   //@ts-ignore
-//   window.web3.currentProvider.request({ method: 'eth_requestAccounts' }).then((accounts) => {
-//     console.log(accounts)
-//     sendResponse(accounts)
-//   });
-//   // console.log(document.body)
-// })

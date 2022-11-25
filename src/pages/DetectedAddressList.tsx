@@ -107,7 +107,10 @@ const DetectedAddressList: FC = () => {
           tab.id,
           { url: "detect" },
           function handler(res) {
-            setWallets(res);
+            console.log(res);
+            if (res && res.length > 0) {
+              setWallets(res);
+            }
             setTimeout(() => {
               setScanning(false);
             }, 200);

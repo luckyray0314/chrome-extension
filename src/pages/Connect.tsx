@@ -92,9 +92,7 @@ const ErrorSpan = styled.p`
 `;
 
 const Connect: FC = () => {
-  const [walletAddress, setWalletAddress] = useState<string>(
-    "0xA37f49E7B0fb28923515eE6a5D8B5a4fC2f2Cd1B"
-  );
+  const [walletAddress, setWalletAddress] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -104,37 +102,32 @@ const Connect: FC = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tab = tabs[0];
       if (tab && tab.id) {
-        chrome.tabs.sendMessage(tab.id, { url: "connect" }, function handler(res) {
-          setWallets(res);
-          setTimeout(() => {
-            setScanning(false);
-          }, 200);
-        });
+        chrome.tabs.sendMessage(
+          tab.id,
+          { url: "connect" },
+          function handler(res) {}
+        );
       }
     });
 
-    navigate("/addresslist");
-    if (provider) {
-      console.log('provider detected', provider)
-      const eth = new Eth(provider)
-      console.log('MetaMask provider detected.')
-      console.log(eth)
-      eth.accounts()
-      .then((accounts: string[]) => {
-        console.log(accounts)
-        console.log(`Detected MetaMask account ${accounts[0]}`)
-      })
-    
-      provider.on('error', (error) => {
-        console.log(error)
-        // if (error && error.includes('lost connection')) {
-        //   renderText('MetaMask extension not detected.')
-        // }
-      })
-    
-    } else {
-      console.log('MetaMask provider not detected.')
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0];
+      if (tab && tab.id) {
+        setTimeout(() => {
+          chrome.tabs.sendMessage(
+            tab.id,
+            { url: "getmywallet" },
+            function handler(res) {
+              if (res && res.length > 0) {
+                console.log(res[0]);
+                setWalletAddress(res[0]);
+                navigate("/addresslist");
+              }
+            }
+          );
+        }, 500);
+      }
+    });
     // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     //   console.log(tabs);
     //   const tab = tabs[0];
