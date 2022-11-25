@@ -101,16 +101,18 @@ const DetectedAddressList: FC = () => {
 
   const detectWalletAddress = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      console.log(tabs);
       const tab = tabs[0];
       if (tab && tab.id) {
-        chrome.tabs.sendMessage(tab.id, { url: "123" }, function handler(res) {
-          console.log(res);
-          setWallets(res);
-          setTimeout(() => {
-            setScanning(false);
-          }, 200);
-        });
+        chrome.tabs.sendMessage(
+          tab.id,
+          { url: "detect" },
+          function handler(res) {
+            setWallets(res);
+            setTimeout(() => {
+              setScanning(false);
+            }, 200);
+          }
+        );
       }
     });
   };

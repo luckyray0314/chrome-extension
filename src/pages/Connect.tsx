@@ -5,8 +5,6 @@ import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import { useWeb3React } from "@web3-react/core";
 import walletAddressShow from "../functions/walletAddressShow";
-// import { injected } from "../wallet/Connectors";
-// import { connectMetaMask } from "../contentScript";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -104,6 +102,18 @@ const Connect: FC = () => {
   const navigate = useNavigate();
 
   async function connect() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0];
+      if (tab && tab.id) {
+        chrome.tabs.sendMessage(tab.id, { url: "connect" }, function handler(res) {
+          setWallets(res);
+          setTimeout(() => {
+            setScanning(false);
+          }, 200);
+        });
+      }
+    });
+
     navigate("/addresslist");
     // setIsConnected(true);
     // if (isConnected === true) {
