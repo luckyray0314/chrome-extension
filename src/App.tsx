@@ -15,11 +15,6 @@ function App() {
         <Route path="/messagelist" element={<MessageList />}></Route>
       </Routes>
     </HashRouter>
-    // <div className="App">
-    //   <DetectedAddressList />
-    //   <MessageTo />
-    //   <Connect />
-    // </div>
   );
 }
 

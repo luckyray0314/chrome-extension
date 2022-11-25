@@ -105,39 +105,31 @@ const Connect: FC = () => {
         chrome.tabs.sendMessage(
           tab.id,
           { url: "connect" },
-          function handler(res) {}
+          function handler(res) {
+            console.log(res)
+          }
         );
       }
     });
-
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tab = tabs[0];
-      if (tab && tab.id) {
-        setTimeout(() => {
+    
+    const timer = setInterval(() => {
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0];
+        if (tab && tab.id) {
           chrome.tabs.sendMessage(
             tab.id,
             { url: "getmywallet" },
             function handler(res) {
               if (res && res.length > 0) {
-                console.log(res[0]);
+                clearInterval(timer);
                 setWalletAddress(res[0]);
-                navigate("/addresslist");
+                navigate(`/addresslist?address=${res[0]}`);
               }
             }
           );
-        }, 500);
-      }
-    });
-    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    //   console.log(tabs);
-    //   const tab = tabs[0];
-    //   if (tab && tab.id) {
-    //     chrome.tabs.sendMessage(tab.id, { url: "123"}, function handler (res) {
-    //       console.log(chrome.runtime.lastError)
-    //       console.log(res)
-    //     });
-    //   }
-    // });
+        }
+      });
+    }, 2000);
     // setIsConnected(true);
     // if (isConnected === true) {
     //   const data = {

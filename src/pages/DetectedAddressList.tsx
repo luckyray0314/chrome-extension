@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SingleAddressRow from "../components/detectedAddressList/SingleAddressRow";
 import styled from "styled-components";
 import refresh from "../assets/refresh.svg";
 import home from "../assets/home.svg";
 import greyScanning from "../assets/grey-scanning.svg";
+import walletAddressShow from "../functions/walletAddressShow";
 
 const Wrapper = styled.div`
   width: 550px;
@@ -97,7 +98,9 @@ const ScanText = styled.div`
 const DetectedAddressList: FC = () => {
   const [scanning, setScanning] = useState<boolean>(true);
   const [wallets, setWallets] = useState<string[]>([]);
+  const [myWallet, setMyWallet] = useState<string>();
   const navigate = useNavigate();
+  const [search, setSearch] = useSearchParams();
 
   const detectWalletAddress = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -120,6 +123,7 @@ const DetectedAddressList: FC = () => {
     });
   };
   useEffect(() => {
+    setMyWallet(search.get("address"));
     detectWalletAddress();
   }, []);
 
@@ -132,6 +136,7 @@ const DetectedAddressList: FC = () => {
     <Wrapper>
       <HeaderContainer>
         <Title>{wallets ? wallets.length : 0} Addresses Detected</Title>
+        {myWallet}
         <ButtonContainer>
           <img onClick={() => onRefresh()} src={refresh} alt="Refresh" />
           <img src={home} alt="Home" />

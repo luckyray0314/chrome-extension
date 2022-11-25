@@ -42,18 +42,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     let contentHtml = document.body.outerHTML;
     let strippedHtml = contentHtml.replace(/<[^>]+>/g, " ");
     const htmlArray = strippedHtml.split(" ");
+    const myWallet = document.getElementById("span-wallet-address").innerHTML;
     let addressArray = [];
     for (let i = 0; i < htmlArray.length; i++) {
-      if (Validator.validate(htmlArray[i], "ETH")) {
+      if (
+        Validator.validate(htmlArray[i], "ETH") &&
+        htmlArray[i] !== myWallet
+      ) {
         addressArray.push(htmlArray[i]);
       }
     }
     sendResponse(addressArray);
   } else if (request.url === "connect") {
     connect();
+    sendResponse("Done");
   } else if (request.url === "getmywallet") {
     let myWallet = [];
-    myWallet.push(document.getElementById("span-wallet-address").innerHTML);
-    sendResponse(myWallet);
+    const spanEl = document.getElementById("span-wallet-address");
+    if (spanEl) {
+      console.log("spanEl");
+      myWallet.push(document.getElementById("span-wallet-address").innerHTML);
+      sendResponse(myWallet);
+    }
   }
 });
