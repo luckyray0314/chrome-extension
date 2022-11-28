@@ -38,7 +38,7 @@ const SingleAddressRow: FC<TypeProps> = (props) => {
   const navigate = useNavigate();
 
   const onMessage = () => {
-    navigate(`/messageTo/${props.address}`);
+    navigate(`/messageTo/${props.address}?myaddress=${props.myAddress}`);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import leftArrow from "../assets/left-arrow.svg";
@@ -147,31 +147,40 @@ const SpanTime = styled.span`
 `;
 
 const MessageList: FC = () => {
-  const [messageData, setMessageData] = useState([
-    {
-      content:
-        "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
-      type: "send",
-    },
-    {
-      content: "hey, I want to contact you",
-      type: "receive",
-    },
-    {
-      content:
-        "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
-      type: "send",
-    },
-    {
-      content: "hey, I want to contact you",
-      type: "receive",
-    },
-  ]);
+  const [messageData, setMessageData] = useState([]);
+  const [message, setMessage] = useState("");
   let navigate = useNavigate();
 
   const onBack = () => {
     navigate(`/addresslist`);
   };
+
+  useEffect(() => {
+    setMessageData([
+      {
+        content:
+          "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
+        type: "send",
+      },
+      {
+        content: "hey, I want to contact you",
+        type: "receive",
+      },
+      {
+        content:
+          "Find out who is in charge of this portion of the process. Find out who is in chargeContent",
+        type: "send",
+      },
+      {
+        content: "hey, I want to contact you",
+        type: "receive",
+      },
+    ]);
+  }, []);
+
+  const onSend = () => {
+    console.log(message);
+  }
 
   return (
     <Wrapper>
@@ -243,10 +252,10 @@ const MessageList: FC = () => {
       </ContentDiv>
       <FooterContainer>
         <InputDiv>
-          <InputMessage placeholder="Write here..."></InputMessage>
+          <InputMessage placeholder="Write here..." onChange={(e) => setMessage(e.target.value)}></InputMessage>
           <img src={plusGray} alt="" />
         </InputDiv>
-        <SendButton>
+        <SendButton onClick={() => onSend()}>
           <img src={send} alt="" />
         </SendButton>
       </FooterContainer>

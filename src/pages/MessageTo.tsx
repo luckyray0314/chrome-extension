@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useState, useEffect } from "react";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import styled from "styled-components";
 import leftArrow from "../assets/left-arrow.svg";
 import plus from "../assets/plus.svg";
@@ -60,7 +60,7 @@ const SendButton = styled.button`
   color: #ffffff;
 `;
 
-const PlusButton1 = styled.button`
+const PlusButton1 = styled.div`
   box-sizing: border-box;
   background: linear-gradient(91.24deg, #1de99b 0.26%, #0063fb 99.58%);
   display: flex;
@@ -121,6 +121,10 @@ const SpanName = styled.span`
 
 const MessageTo: FC = () => {
   const [name, setName] = useState<string>("Zain Ekstrom");
+  const [search, setSearch] = useSearchParams();
+  const [myWallet, setMyWallet] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const { id } = useParams();
   const naviagte = useNavigate();
 
   const onBack = () => {
@@ -130,6 +134,10 @@ const MessageTo: FC = () => {
   const onSend = () => {
     naviagte("/messagelist");
   };
+
+  useEffect(() => {
+    setMyWallet(search.get("myaddress"));
+  }, [])
 
   return (
     <Wrapper>
@@ -145,7 +153,7 @@ const MessageTo: FC = () => {
           <SpanName>@{name}</SpanName>
         </ColDiv>
       </HeaderContainer>
-      <MessageInput></MessageInput>
+      <MessageInput onChange={(e) => setMessage(e.target.value)}></MessageInput>
       <FooterContainer>
         <PlusButton1>
           <PlusButton2>

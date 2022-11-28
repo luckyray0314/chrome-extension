@@ -60,7 +60,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     let myWallet = [];
     const spanEl = document.getElementById("span-wallet-address");
     if (spanEl) {
-      console.log("spanEl");
       myWallet.push(document.getElementById("span-wallet-address").innerHTML);
       sendResponse(myWallet);
     }

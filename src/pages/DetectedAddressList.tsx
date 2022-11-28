@@ -102,7 +102,7 @@ const DetectedAddressList: FC = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useSearchParams();
 
-  const detectWalletAddress = () => {
+  const detectWalletAddress = async () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tab = tabs[0];
       if (tab && tab.id) {
@@ -110,7 +110,6 @@ const DetectedAddressList: FC = () => {
           tab.id,
           { url: "detect" },
           function handler(res) {
-            console.log(res);
             if (res && res.length > 0) {
               setWallets(res);
             }
@@ -172,7 +171,7 @@ const DetectedAddressList: FC = () => {
             return (
               <div key={id}>
                 {id !== 0 && <Divider />}
-                <SingleAddressRow address={wallet}></SingleAddressRow>
+                <SingleAddressRow address={wallet} myAddress={myWallet}></SingleAddressRow>
               </div>
             );
           })

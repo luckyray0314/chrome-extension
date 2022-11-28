@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
@@ -106,12 +106,12 @@ const Connect: FC = () => {
           tab.id,
           { url: "connect" },
           function handler(res) {
-            console.log(res)
+            console.log(res);
           }
         );
       }
     });
-    
+
     const timer = setInterval(() => {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         const tab = tabs[0];
@@ -155,6 +155,24 @@ const Connect: FC = () => {
   const onClose = () => {
     window.close();
   };
+
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0];
+      if (tab && tab.id) {
+        chrome.tabs.sendMessage(
+          tab.id,
+          { url: "getmywallet" },
+          function handler(res) {
+            if (res && res.length > 0) {
+              setWalletAddress(res[0]);
+              navigate(`/addresslist?address=${res[0]}`);
+            }
+          }
+        );
+      }
+    });
+  }, []);
 
   return (
     <Wrapper>
