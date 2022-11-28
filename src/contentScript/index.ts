@@ -11,6 +11,26 @@ const Validator = require("wallet-validator");
 // Don't forget to change `matches` in manifest.json if you want to only change specific webpages
 
 // This needs to be an export due to typescript implementation limitation of needing '--isolatedModules' tsconfig
+
+// const jqueryScript = document.createElement("script");
+// jqueryScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+// jqueryScript.type = 'text/javascript';
+// document.getElementsByTagName('head')[0].appendChild(jqueryScript);
+
+// const addButtonScript = document.createElement("script");
+// addButtonScript.innerHTML = `
+// function addButton() {
+//   const allSpan = $('span').map(function() {
+//     const text = $(this).text();
+//     console.log(text);
+//     // $(this).html(text + "<button>SEND</button>")
+//     return this.innerHTML;
+//   }).get();
+// }
+// addButton();
+// `
+// document.body.appendChild(addButtonScript);
+
 export function printAllPageLinks() {
   const ethScriptEl = document.createElement("script");
   ethScriptEl.innerHTML = `

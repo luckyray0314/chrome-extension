@@ -4,5 +4,5 @@ messageInBackground();
 
 // This needs to be an export due to typescript implementation limitation of needing '--isolatedModules' tsconfig
 export function messageInBackground() {
-  
+
 }
