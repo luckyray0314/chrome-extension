@@ -1,0 +1,1 @@
+export const SERVER_URL = "http://sirklserver-env.eba-advpp2ip.eu-west-1.elasticbeanstalk.com/";

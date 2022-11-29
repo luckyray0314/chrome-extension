@@ -23,7 +23,7 @@ const Validator = require("wallet-validator");
 //   const allSpan = $('span').map(function() {
 //     const text = $(this).text();
 //     console.log(text);
-//     // $(this).html(text + "<button>SEND</button>")
+//     $(this).html(text + "<button>SEND</button>")
 //     return this.innerHTML;
 //   }).get();
 // }
@@ -32,6 +32,9 @@ const Validator = require("wallet-validator");
 // document.body.appendChild(addButtonScript);
 
 export function printAllPageLinks() {
+}
+
+const connect = async () => {
   const ethScriptEl = document.createElement("script");
   ethScriptEl.innerHTML = `
   function connectSirkiWallet () {
@@ -51,11 +54,43 @@ export function printAllPageLinks() {
   connectSirkiWallet();
   `;
   document.body.appendChild(ethScriptEl);
-}
-
-const connect = async () => {
-  printAllPageLinks();
 };
+
+const signIn = async () => {
+  const signScriptEl = document.createElement("script");
+  signScriptEl.innerHTML = `
+  async function signInWallet () {
+    const msgParams = [
+      {
+        type: 'string',
+        name: 'Message',
+        value: 'superbluestar',
+      },
+    ];
+    let myWallet;
+    if (document.getElementById("span-wallet-address")) {
+      myWallet = document.getElementById("span-wallet-address").innerHTML;
+    }
+    try {
+      const from = myWallet;
+      const sign = await ethereum.request({
+        method: 'eth_signTypedData',
+        params: [msgParams, from],
+      });
+      const spanHash = document.createElement("span");
+      spanHash.setAttribute("id", "span-hash");
+      spanHash.setAttribute("hidden", true);
+      const textnode = document.createTextNode(sign);
+      spanHash.appendChild(textnode);
+      document.body.appendChild(spanHash);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  signInWallet();
+  `;
+  document.body.appendChild(signScriptEl);
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.url === "detect") {
@@ -75,13 +110,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(addressArray);
   } else if (request.url === "connect") {
     connect();
-    sendResponse("Done");
-  } else if (request.url === "getmywallet") {
+  } else if (request.url === "get-my-wallet") {
     let myWallet = [];
     const spanEl = document.getElementById("span-wallet-address");
     if (spanEl) {
-      myWallet.push(document.getElementById("span-wallet-address").innerHTML);
+      myWallet.push(spanEl.innerHTML);
       sendResponse(myWallet);
+    }
+  } else if (request.url === "sign-in-metamask") {
+    signIn();
+  } else if (request.url === "get-hash") {
+    const spanEl = document.getElementById("span-hash");
+    if (spanEl) {
+      const hash = spanEl.innerHTML;
+      console.log("hash:" + hash);
+      sendResponse(hash);
     }
   }
 });

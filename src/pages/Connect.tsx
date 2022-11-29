@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import walletAddressShow from "../functions/walletAddressShow";
+import { SERVER_URL } from "../config/config";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -99,6 +100,7 @@ const Connect: FC = () => {
   const navigate = useNavigate();
 
   async function connect() {
+    let myAddress = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tab = tabs[0];
       if (tab && tab.id) {
@@ -118,38 +120,67 @@ const Connect: FC = () => {
         if (tab && tab.id) {
           chrome.tabs.sendMessage(
             tab.id,
-            { url: "getmywallet" },
+            { url: "get-my-wallet" },
             function handler(res) {
               if (res && res.length > 0) {
                 clearInterval(timer);
                 setWalletAddress(res[0]);
-                navigate(`/addresslist?address=${res[0]}`);
+                myAddress = res[0];
+                chrome.tabs.query(
+                  { active: true, currentWindow: true },
+                  function (tabs) {
+                    const tab = tabs[0];
+                    if (tab && tab.id) {
+                      chrome.tabs.sendMessage(
+                        tab.id,
+                        { url: "sign-in-metamask" },
+                        function handler(res) {}
+                      );
+                    }
+                  }
+                );
               }
             }
           );
         }
       });
-    }, 2000);
-    // setIsConnected(true);
-    // if (isConnected === true) {
-    //   const data = {
-    //     wallet: walletAddress,
-    //     password: password,
-    //   };
-    //   axios
-    //     .post(
-    //       `http://sirklserver-env.eba-advpp2ip.eu-west-1.elasticbeanstalk.com/auth/signIn`,
-    //       data
-    //     )
-    //     .then((response) => {
-    //       navigate("/addresslist");
-    //     })
-    //     .catch((err) => {
-    //       setError(err.response.data.message)
-    //       console.log(err.response.data);
-    //     });
-    //   } else {
-    // }
+    }, 1000);
+
+    const timer2 = setInterval(() => {
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0];
+        if (tab && tab.id) {
+          chrome.tabs.sendMessage(
+            tab.id,
+            { url: "get-hash" },
+            function handler(res) {
+              if (res && res.length > 0) {
+                clearInterval(timer2);
+                const data = {
+                  wallet: myAddress,
+                  message: "superbluestar",
+                  signature: res,
+                };
+                axios
+                  .post(`${SERVER_URL}auth/verifySignature`, data)
+                  .then((response) => {
+                    console.log(response);
+                    if (response.status === 201) {
+                      navigate(`/addresslist?address=${myAddress}`);
+                    } else {
+                      alert("Somthing went wrong");
+                    }
+                  })
+                  .catch((err) => {
+                    setError(err.response.data.message);
+                    console.log(err.response.data);
+                  });
+              }
+            }
+          );
+        }
+      });
+    }, 1000);
   }
 
   const onClose = () => {
@@ -157,16 +188,34 @@ const Connect: FC = () => {
   };
 
   useEffect(() => {
+    let myWallet = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tab = tabs[0];
       if (tab && tab.id) {
         chrome.tabs.sendMessage(
           tab.id,
-          { url: "getmywallet" },
+          { url: "get-my-wallet" },
           function handler(res) {
             if (res && res.length > 0) {
+              myWallet = res[0];
               setWalletAddress(res[0]);
-              navigate(`/addresslist?address=${res[0]}`);
+              chrome.tabs.query(
+                { active: true, currentWindow: true },
+                function (tabs) {
+                  const tab = tabs[0];
+                  if (tab && tab.id) {
+                    chrome.tabs.sendMessage(
+                      tab.id,
+                      { url: "get-hash" },
+                      function handler(res) {
+                        if (res && res.length > 0) {
+                          navigate(`/addresslist?address=${myWallet}`);
+                        }
+                      }
+                    );
+                  }
+                }
+              );
             }
           }
         );
