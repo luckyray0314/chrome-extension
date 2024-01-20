@@ -1,4 +1,4 @@
-# CRA project, Signed in Metamask
+# CRA(created react app) project, Signed in Metamask
 
 ## Available Scripts
 
